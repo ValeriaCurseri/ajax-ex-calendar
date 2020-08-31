@@ -1,29 +1,14 @@
 $(document).ready(function(){
 
-    // Link API: https://flynn.boolean.careers/exercises/api/holidays?year=2018&month=0
-
-    // Creiamo un calendario dinamico con le festività.
-    // Il calendario partirà da gennaio 2018 e si concluderà a dicembre 2018 (unici dati disponibili sull’API).
-
-    // Milestone 1
-    // Creiamo il mese di Gennaio, e con la chiamata all'API inseriamo le festività.
-
     // 1. creo un oggetto moment sulla data di partenza
     var dataDiPartenza = moment('2018-01-01');
 
-    // 2. ne mostro mese e anno
-    var meseDiPartenza = moment(dataDiPartenza).month();
-    var annoDiPartenza = moment(dataDiPartenza).year();
-    // per inserirli nell'h1 però devo usare format perchè altrimenti restituisce un numero
-    $('h1#mese').html(dataDiPartenza.format('MMMM' + ' ' + 'YYYY'));
-
     // 5. creiamo una funzione dove racchiudere tutto con un argomento (data di partenza)
+    inserisciGiorni(dataDiPartenza);
 
-    // creiamo nuova fz per le festività
+    // 6. creiamo nuova fz per integrare le festività
+    inserisciFeste(dataDiPartenza);
 
-    // metodo ajax per la API
-    // inserisco nuova coppia chiave / valore in data per le key
-    // in success ciclo for o each
     //
     // cambiare valore di un attributo con attr e due parametri
 
@@ -52,22 +37,62 @@ function addZero(giorno){
 }
 
 // funzione per implementare il calendario con i giorni
-function inserisciGiorni(dataDiPartenza){
+function inserisciGiorni(data){
+    // 2. ne mostro mese e anno
+    var meseDiPartenza = moment(data).month() + 1;
+    var annoDiPartenza = moment(data).year();
+    console.log(annoDiPartenza);
+    // per inserirli nell'h1 però devo usare format perchè altrimenti restituisce un numero
+    $('h1#mese').html(data.format('MMMM' + ' ' + 'YYYY'));
+
     // 3. memorizzo in una variabile i giorni all'interno di un mese
-    var giorniDelMese = moment(dataDiPartenza).daysInMonth();
+    var giorniDelMese = moment(data).daysInMonth();
 
     // 4. con un ciclo for e handlebars creo i giorni di gennaio
     for (var i = 1; i <= giorniDelMese; i++) {
-        console.log('Ciao');
         var source = $("#date-template").html();
         var template = Handlebars.compile(source);
 
         var context = {             // personalizzo il context creando un oggetto
             'day': addZero(i),      // funzione addZero per aggiungere uno 0 ai numeri di una sola cifra
-            'month': dataDiPartenza.format('MMMM'),
-            // dataCompleta: annoDiPartenza + '-' + meseDiPartenza + '-' + i
+            'month': data.format('MMMM'),
+            'dataCompleta': annoDiPartenza + '-' + addZero(meseDiPartenza) + '-' + addZero(i)
         };
         var html = template(context);
         $('#elenco-date').append(html);
     }
+}
+
+// funzione per integrare le festività
+function inserisciFeste(data){
+    // metodo ajax per la API
+    $.ajax(
+        {
+            url:'https://flynn.boolean.careers/exercises/api/holidays',
+            method:'GET',
+            data:{          // inserisco nuova coppia chiave / valore in data per le key
+                year:data.year(),
+                month:data.month()
+            },
+            success:function(risposta){
+                for (var i = 0; i < risposta.response.length; i++) {
+                    console.log('ciao');
+                    var listItem = $('li[data-completa="' + risposta.response[i].date + '"]');
+                    console.log(listItem);
+
+                    // var nomeFesta = risposta.response[i].name;
+                    // var dataFesta = risposta.response[i].date;
+                    // if ($(this).hasClass(risposta.response[i].date)){
+                    //     $(this).addClass('festivita');
+                    // }
+                };
+                // $('ul#elenco-date li').each(function(i, risposta){
+                //     if ($(this).hasClass(risposta.response[i].date)){
+                //         $(this).addClass('festivita');
+                //     }
+                // })
+            },
+            error: alert('Si è verificato un errore')
+        }
+    )
 }
