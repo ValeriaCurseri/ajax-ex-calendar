@@ -75,22 +75,15 @@ function inserisciFeste(data){
                 month:data.month()
             },
             success:function(risposta){
-                for (var i = 0; i < risposta.response.length; i++) {
+                // OPZIONE 1 CON CICLO FOR
+                for (var i = 0; i < risposta.response.length; i++) {    // perchè non riprendiamo la i all'interno del ciclo?
                     console.log('ciao');
                     var listItem = $('li[data-completa="' + risposta.response[i].date + '"]');
                     console.log(listItem);
-
-                    // var nomeFesta = risposta.response[i].name;
-                    // var dataFesta = risposta.response[i].date;
-                    // if ($(this).hasClass(risposta.response[i].date)){
-                    //     $(this).addClass('festivita');
-                    // }
+                    listItem.append('- ' + risposta.response[i].name);
+                    listItem.addClass('festivita');
                 };
-                // $('ul#elenco-date li').each(function(i, risposta){
-                //     if ($(this).hasClass(risposta.response[i].date)){
-                //         $(this).addClass('festivita');
-                //     }
-                // })
+                // OPZIONE 2 CON EACH??
             },
             error: alert('Si è verificato un errore')
         }
