@@ -17,27 +17,10 @@ $(document).ready(function(){
     // per inserirli nell'h1 però devo usare format perchè altrimenti restituisce un numero
     $('h1#mese').html(dataDiPartenza.format('MMMM' + ' ' + 'YYYY'));
 
-    // 3. memorizzo in una variabile i giorni all'interno di un mese
-    var giorniDelMese = moment(dataDiPartenza).daysInMonth();
+    // 5. creiamo una funzione dove racchiudere tutto con un argomento (data di partenza)
 
-    // 4. con un ciclo for e handlebars creo i giorni di gennaio
-    for (var i = 1; i <= giorniDelMese; i++) {
-        var source = $("#date-template").html();
-        var template = Handlebars.compile(source);
-
-        var context = {             // personalizzo il context creando un oggetto
-            day: i,
-            month: dataDiPartenza.format('MMMM'),
-            // dataCompleta: annoDiPartenza + '-' + meseDiPartenza + '-' + i
-        };
-        var html = template(context);
-        $("#elenco-date").append(html);
-    }
-
-
-    // funzione addZero per aggiungere uno 0 ai numeri di una sola cifra
-    // creiamo una funzione dove racchiudere tutto con un argomento (data di partenza)
     // creiamo nuova fz per le festività
+
     // metodo ajax per la API
     // inserisco nuova coppia chiave / valore in data per le key
     // in success ciclo for o each
@@ -56,3 +39,35 @@ $(document).ready(function(){
     // BONUS: grafica
 
 });
+
+// ----- funzioni ----- //
+
+// funzione addZero per aggiungere uno 0 ai numeri di una sola cifra
+function addZero(giorno){
+    if (giorno < 10){
+        return '0' + giorno;
+    } else {
+        return giorno;
+    }
+}
+
+// funzione per implementare il calendario con i giorni
+function inserisciGiorni(dataDiPartenza){
+    // 3. memorizzo in una variabile i giorni all'interno di un mese
+    var giorniDelMese = moment(dataDiPartenza).daysInMonth();
+
+    // 4. con un ciclo for e handlebars creo i giorni di gennaio
+    for (var i = 1; i <= giorniDelMese; i++) {
+        console.log('Ciao');
+        var source = $("#date-template").html();
+        var template = Handlebars.compile(source);
+
+        var context = {             // personalizzo il context creando un oggetto
+            'day': addZero(i),      // funzione addZero per aggiungere uno 0 ai numeri di una sola cifra
+            'month': dataDiPartenza.format('MMMM'),
+            // dataCompleta: annoDiPartenza + '-' + meseDiPartenza + '-' + i
+        };
+        var html = template(context);
+        $('#elenco-date').append(html);
+    }
+}
