@@ -9,9 +9,6 @@ $(document).ready(function(){
     // 6. creiamo nuova fz per integrare le festività
     inserisciFeste(dataDiPartenza);
 
-    //
-    // cambiare valore di un attributo con attr e due parametri
-
     // Milestone 2
     // Diamo la possibilità di cambiare mese, gestendo il caso in cui l’API non possa ritornare festività.
     // Attenzione!
@@ -20,6 +17,17 @@ $(document).ready(function(){
     // Controllare quanti giorni ha il mese scelto formando così una lista
     // Chiedere all’API quali sono le festività per il mese scelto
     // Evidenziare le festività nella lista
+
+    // 7. al click sui bottoni cambiamo mese
+    $('#next').click(function(){
+        var meseNuova = parseInt(moment(dataDiPartenza).format('MM')) + 2;
+        var dataDiPartenzaNuova = moment(dataDiPartenza).year() + '-' + addZero(meseNuova) + '-' + moment(dataDiPartenza).format('DD');
+        console.log(dataDiPartenzaNuova);
+        var nuovaDataDiPartenza = moment('dataDiPartenzaNuova');
+        // attivo le due funzioni con l'argomento aggiornato
+        inserisciGiorni(nuovaDataDiPartenza);
+        inserisciFeste(nuovaDataDiPartenza);
+    })
 
     // BONUS: grafica
 
@@ -80,12 +88,13 @@ function inserisciFeste(data){
                     console.log('ciao');
                     var listItem = $('li[data-completa="' + risposta.response[i].date + '"]');
                     console.log(listItem);
-                    listItem.append('- ' + risposta.response[i].name);
+                    listItem.append(' - ' + risposta.response[i].name);
                     listItem.addClass('festivita');
                 };
                 // OPZIONE 2 CON EACH??
+                // cambiare valore di un attributo con attr e due parametri
             },
-            error: alert('Si è verificato un errore')
+            error: alert('Si è verificato un errore') // NOTA: perchè compare??
         }
     )
 }
