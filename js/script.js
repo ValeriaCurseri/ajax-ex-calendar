@@ -64,7 +64,7 @@ function inserisciFesta(data){
                 for (var i = 0; i < risposta.response.length; i++){                             // ciclo l'array delle festività
                     var elemento = $('li[data-completa="' + risposta.response[i].date + '"]');  // memorizzo gli li corrispondenti alla festività
                     elemento.addClass('festa');                                                 // aggiungo la class festa
-                    elemento.append(' - ' + risposta.response[i].name);                         // appendo il nome della festa dopo la data
+                    elemento.find('.festività').text(risposta.response[i].name);                         // appendo il nome della festa dopo la data
                 }
             },
             error: function(){
