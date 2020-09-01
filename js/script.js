@@ -1,100 +1,95 @@
 $(document).ready(function(){
 
-    // 1. creo un oggetto moment sulla data di partenza
-    var dataDiPartenza = moment('2018-01-01');
+    // var dataDiPartenza = moment("2018-01-01");
+    var dataDiPartenza = moment($('h1#mese').attr('data-partenza')); // MEMORIZZO l'attributo data-partenza del tag h1 e lo considero come data di partenza per generare le date
 
-    // 5. creiamo una funzione dove racchiudere tutto con un argomento (data di partenza)
-    inserisciGiorni(dataDiPartenza);
+    inserisciDate(dataDiPartenza);
 
-    // 6. creiamo nuova fz per integrare le festività
-    inserisciFeste(dataDiPartenza);
+    inserisciFesta(dataDiPartenza);
 
-    // Milestone 2
-    // Diamo la possibilità di cambiare mese, gestendo il caso in cui l’API non possa ritornare festività.
-    // Attenzione!
-    // Ogni volta che cambio mese dovrò:
-    // Controllare se il mese è valido (per ovviare al problema che l’API non carichi holiday non del 2018)
-    // Controllare quanti giorni ha il mese scelto formando così una lista
-    // Chiedere all’API quali sono le festività per il mese scelto
-    // Evidenziare le festività nella lista
-
-    // 7. al click sui bottoni cambiamo mese
-    $('#next').click(function(){
-        var meseNuova = parseInt(moment(dataDiPartenza).format('MM')) + 2;
-        var dataDiPartenzaNuova = moment(dataDiPartenza).year() + '-' + addZero(meseNuova) + '-' + moment(dataDiPartenza).format('DD');
-        console.log(dataDiPartenzaNuova);
-        var nuovaDataDiPartenza = moment('dataDiPartenzaNuova');
-        // attivo le due funzioni con l'argomento aggiornato
-        inserisciGiorni(nuovaDataDiPartenza);
-        inserisciFeste(nuovaDataDiPartenza);
+    $('button#next').click(function(){
+        next(dataDiPartenza);
     })
 
-    // BONUS: grafica
+    $('button#prev').click(function(){
+        prev(dataDiPartenza);
+    })
 
 });
 
-// ----- funzioni ----- //
+// --- funzioni --- //
 
-// funzione addZero per aggiungere uno 0 ai numeri di una sola cifra
-function addZero(giorno){
-    if (giorno < 10){
-        return '0' + giorno;
-    } else {
-        return giorno;
+function addZero(n){
+    if (n < 10){
+        return '0' + n;
     }
+    return n;
 }
 
-// funzione per implementare il calendario con i giorni
-function inserisciGiorni(data){
-    // 2. ne mostro mese e anno
-    var meseDiPartenza = moment(data).month() + 1;
-    var annoDiPartenza = moment(data).year();
-    console.log(annoDiPartenza);
-    // per inserirli nell'h1 però devo usare format perchè altrimenti restituisce un numero
-    $('h1#mese').html(data.format('MMMM' + ' ' + 'YYYY'));
+function inserisciDate(data){
+    $('ul#calendario').empty();                         // svuoto l'elenco ul prima di riempirlo
 
-    // 3. memorizzo in una variabile i giorni all'interno di un mese
-    var giorniDelMese = moment(data).daysInMonth();
+    var giorniTotali = data.daysInMonth();              // calcolo i giorni totali in un mese
 
-    // 4. con un ciclo for e handlebars creo i giorni di gennaio
-    for (var i = 1; i <= giorniDelMese; i++) {
-        var source = $("#date-template").html();
+    var meseParola = data.format('MMMM');       // memorizzo in una variabile il nome del mese
+    var anno = data.year();                     // memorizzo in una variabile l'anno
+
+    $('h1#mese').html(meseParola + ' ' + anno);         // implemento l'h1 con mese e anno
+
+    for (var i = 1; i <= giorniTotali; i++){            // ciclo tutti i giorni del mese
+        var source = $("#entry-template").html();
         var template = Handlebars.compile(source);
 
-        var context = {             // personalizzo il context creando un oggetto
-            'day': addZero(i),      // funzione addZero per aggiungere uno 0 ai numeri di una sola cifra
-            'month': data.format('MMMM'),
-            'dataCompleta': annoDiPartenza + '-' + addZero(meseDiPartenza) + '-' + addZero(i)
+        var context = {                                 // vado a implementare con handlebars
+            giorno: addZero(i),                         // i giorni
+            mese: meseParola,                           // i mesi in parola
+            dataCompleta: anno + '-' + data.format('MM') + '-' + addZero(i) // la data completa nel tag (servirà per il controllo delle festività)
         };
         var html = template(context);
-        $('#elenco-date').append(html);
+
+        $('#calendario').append(html);                  // appendo gli li nell'ul appena ripulito
     }
 }
 
-// funzione per integrare le festività
-function inserisciFeste(data){
-    // metodo ajax per la API
+function inserisciFesta(data){
     $.ajax(
         {
-            url:'https://flynn.boolean.careers/exercises/api/holidays',
+            url: 'https://flynn.boolean.careers/exercises/api/holidays',
             method:'GET',
-            data:{          // inserisco nuova coppia chiave / valore in data per le key
-                year:data.year(),
-                month:data.month()
+            data:{                  // inserisco le due chiavi dell'API
+                year: data.year(),
+                month: data.month()
             },
-            success:function(risposta){
-                // OPZIONE 1 CON CICLO FOR
-                for (var i = 0; i < risposta.response.length; i++) {    // perchè non riprendiamo la i all'interno del ciclo?
-                    console.log('ciao');
-                    var listItem = $('li[data-completa="' + risposta.response[i].date + '"]');
-                    console.log(listItem);
-                    listItem.append(' - ' + risposta.response[i].name);
-                    listItem.addClass('festivita');
-                };
-                // OPZIONE 2 CON EACH??
-                // cambiare valore di un attributo con attr e due parametri
+            success: function(risposta){
+                for (var i = 0; i < risposta.response.length; i++){                             // ciclo l'array delle festività
+                    var elemento = $('li[data-completa="' + risposta.response[i].date + '"]');  // memorizzo gli li corrispondenti alla festività
+                    elemento.addClass('festa');                                                 // aggiungo la class festa
+                    elemento.append(' - ' + risposta.response[i].name);                         // appendo il nome della festa dopo la data
+                }
             },
-            error: alert('Si è verificato un errore') // NOTA: perchè compare??
+            error: function(){
+                alert('Si è verificato un errore');
+            }
         }
-    )
+    );
+}
+
+function next(data){
+    if (data.month() == 11){            // se il mese è dicembre
+        alert('Non puoi proseguire');
+    } else {                            // altrimenti
+        data.add(1, 'months');          // aggiungo un mese alla data di partenza
+        inserisciDate(data);            // ri-eseguo la fz
+        inserisciFesta(data);           // ri-eseguo la fz
+    }
+}
+
+function prev(data){
+    if (data.month() == 0){             // se il mese è gennaio
+        alert('Non puoi proseguire');
+    } else {                            // altrimenti
+        data.subtract(1, 'months');     // tolgo un mese alla data di partenza
+        inserisciDate(data);            // ri-eseguo la fz
+        inserisciFesta(data);           // ri-eseguo la fz
+    }
 }

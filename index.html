@@ -11,19 +11,23 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js" integrity="sha512-zT3zHcFYbQwjHdKjCu6OMmETx8fJA9S7E6W7kBeFxultf75OPTYUJigEKX58qgyQMi1m1EgenfjMXlRZG8BXaw==" crossorigin="anonymous"></script>
     </head>
     <body>
-        <div id="calendario">
-            <div id="header">
+        <div class="container">
+            <div class="header">
                 <button id="prev"><<</button>
-                <h1 id='mese'></h1>
+                <h1 id="mese" data-partenza="2018-01-01"></h1> <!-- l'attributo data type serve per cambiarlo lato js-->
                 <button id="next">>></button>
             </div>
-            <ul id="elenco-date">
+            <div>
+                <ul id="calendario">
 
-            </ul>
+                </ul>
+            </div>
         </div>
 
-        <script id="date-template" type="text/x-handlebars-template">
-            <li class="giorno" data-completa="{{dataCompleta}}">{{day}} {{month}}</li>
+        <script id="entry-template" type="text/x-handlebars-template">
+          <li data-completa="{{dataCompleta}}">
+              {{giorno}} {{mese}}
+          </li>
         </script>
 
         <script src="js\script.js" charset="utf-8"></script>
