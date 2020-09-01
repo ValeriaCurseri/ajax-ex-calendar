@@ -4,6 +4,12 @@ body{
     box-sizing:border-box;
 }
 
+/* tipografia */
+h1,h2,h3,h4,h5,h6,p,span{
+    font-family: 'DM Serif Text', serif;
+}
+
+/* struttura */
 .container {
     height:100vh;
     display: flex;
@@ -19,21 +25,49 @@ body{
     border: 2px solid red;
 }
 
+.festività{
+    color:red;
+}
+
 ul#calendario{
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 0!important;
+    text-align: center;
 }
 
 li{
     display: inline-block;
-    width: 12vw;
-    height:11vh;
+    width: 11.7vw;
+    height: 11vh;
+    min-height: 60px;
     list-style: none;
     text-align: center;
-    border:1px solid #000;
-    margin:5px;
+    border: 1px solid #000;
+    margin: 5px;
+    cursor:pointer;
 }
 
 li span{
     display: block;
+}
+
+.date{
+    width: 90%;
+    margin: auto;
+}
+
+i{
+    position:relative;
+    top:40%;
+    margin:0 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+hr{
+    width: 30%;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }

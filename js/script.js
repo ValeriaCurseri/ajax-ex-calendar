@@ -7,13 +7,15 @@ $(document).ready(function(){
 
     inserisciFesta(dataDiPartenza);
 
-    $('button#next').click(function(){
+    $('#next').click(function(){
         next(dataDiPartenza);
     })
 
-    $('button#prev').click(function(){
+    $('#prev').click(function(){
         prev(dataDiPartenza);
     })
+
+
 
 });
 
