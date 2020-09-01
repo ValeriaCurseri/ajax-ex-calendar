@@ -53,12 +53,16 @@ li span{
     display: block;
 }
 
+li span.impegno{
+    text-align: left;
+}
+
 .date{
     width: 90%;
     margin: auto;
 }
 
-i{
+.header i{
     position:relative;
     top:40%;
     margin:0 10px;
@@ -70,4 +74,9 @@ hr{
     width: 30%;
     margin-top: 3px;
     margin-bottom: 3px;
+}
+
+li i{
+    margin:0 5px;
+    font-size: 14px;
 }

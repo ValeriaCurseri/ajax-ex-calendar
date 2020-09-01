@@ -15,7 +15,17 @@ $(document).ready(function(){
         prev(dataDiPartenza);
     })
 
-
+    // // al click su un li appare un alert e il contenuto dell'alert viene inserito nel giorno cliccato come appunto
+    //
+    // $('li').click(function(){
+    //     var giorno = $(this).find('span.giorno').text();
+    //     var impegno = prompt('Che impegno avrai il ' + giorno + '?');
+    //     $(this).find('.impegno').html('<i class="fas fa-check"></i>' + impegno);
+    // });
+    //
+    // $('i.fas.fa-check').click(function(){
+    //     $(this).parent('.impegno').empty();
+    // });
 
 });
 
@@ -83,6 +93,14 @@ function next(data){
         data.add(1, 'months');          // aggiungo un mese alla data di partenza
         inserisciDate(data);            // ri-eseguo la fz
         inserisciFesta(data);           // ri-eseguo la fz
+        // $('li').click(function(){
+        //     var giorno = $(this).find('span.giorno').text();
+        //     var impegno = prompt('Che impegno avrai il ' + giorno + '?');
+        //     $(this).find('.impegno').html('<i class="fas fa-check"></i>' + impegno);
+        // })
+        // $('i.fas.fa-check').click(function(){
+        //     $(this).parent('.impegno').empty();
+        // });
     }
 }
 
@@ -93,5 +111,13 @@ function prev(data){
         data.subtract(1, 'months');     // tolgo un mese alla data di partenza
         inserisciDate(data);            // ri-eseguo la fz
         inserisciFesta(data);           // ri-eseguo la fz
+        // $('li').click(function(){
+        //     var giorno = $(this).find('span.giorno').text();
+        //     var impegno = prompt('Che impegno avrai il ' + giorno + '?');
+        //     $(this).find('.impegno').html('<i class="fas fa-check"></i>' + impegno);
+        // });
+        // $('i.fas.fa-check').click(function(){
+        //     $(this).parent('.impegno').empty();
+        // });
     }
 }
